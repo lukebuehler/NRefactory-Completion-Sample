@@ -78,9 +78,7 @@ namespace CompletionSample.Completion
 		
 		ICompletionData ICompletionDataFactory.CreateVariableCompletionData(IVariable variable)
 		{
-			return new CompletionData(variable.Name) {
-				Image = ClassBrowserIconService.LocalVariable.ImageSource
-			};
+			return new VariableCompletionData(variable);
 		}
 		
 		ICompletionData ICompletionDataFactory.CreateVariableCompletionData(ITypeParameter parameter)

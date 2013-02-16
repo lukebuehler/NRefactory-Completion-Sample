@@ -84,7 +84,7 @@ namespace CompletionSample.Completion
             get { return this.Description; }
         }
 
-        public double Priority
+        public virtual double Priority
         {
             get { return 1.0; }
         }
@@ -267,6 +267,21 @@ namespace CompletionSample.Completion
         }
     }
 
+    internal class VariableCompletionData : CompletionData, IVariableCompletionData
+    {
+        public VariableCompletionData(IVariable variable)
+        {
+            if (variable == null) throw new ArgumentNullException("variable");
+            Variable = variable;
 
+            IAmbience ambience = new CSharpAmbience();
+            DisplayText = variable.Name;
+            Description = ambience.ConvertVariable(variable);
+            CompletionText = Variable.Name;
+            this.Image = ClassBrowserIconService.GetIcon(variable).ImageSource;
+        }
+
+        public IVariable Variable { get; private set; }
+    }
 
 }//end namespace
