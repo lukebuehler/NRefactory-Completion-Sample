@@ -43,7 +43,8 @@ namespace CompletionSample.Completion
             Document = document;
 
             ProjectContent = projectContent.AddOrUpdateFiles(unresolvedFile);
-            Compilation = projectContent.CreateCompilation();
+            //note: it's important that the project content is used that is returned after adding the unresolved file
+            Compilation = ProjectContent.CreateCompilation();
 
             var location = Document.GetLocation(offset);
             Resolver = unresolvedFile.GetResolver(Compilation, location);

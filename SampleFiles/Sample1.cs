@@ -19,5 +19,6 @@ public class OtherClass
     public void GetSample1()
     {
         var sample = new Sample1();
+        sample.Add(10,100);
     }
 }

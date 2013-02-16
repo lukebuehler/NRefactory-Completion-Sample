@@ -5,8 +5,8 @@ This is a sample applications that shows how to do C# code completion in a text 
 It's a pretty full featured sample containing ctrl+space like code completion and method parameter completion. Also showing nice images for different types in the completion window.
 
 See:
-	https://github.com/icsharpcode/NRefactory
-	https://github.com/icsharpcode/SharpDevelop
+ https://github.com/icsharpcode/NRefactory
+ https://github.com/icsharpcode/SharpDevelop
 
 
 Known Issues
@@ -14,20 +14,14 @@ Known Issues
 This is a work in progress and so currently there are quite a few bugs/issues with the code completion. Hopefully they will be fixed soon.
 
   - completion window filter often doesnt show the best option, especially when starting a new word or using ctrl+space.
-	 for example: when typing "new" instead of suggesting as the best option "new" it shows: "NewsStyleUriParser". Or typing "var" becomes "Array"
-	 does this have something to do with the priorities if the AvalonEdit ICompletionData?
-
-  - class member problems
-	 - "this." doesnt work
-	 - method parameters do not appear in method body code completion
-	 - when creating a second class in the same file the members of the other class cannot be referenced as well.
-	 - local variables work
+     for example: when typing "new" instead of suggesting as the best option "new" it shows: "NewsStyleUriParser". Or typing "var" becomes "Array"
+     does this have something to do with the priorities if the AvalonEdit ICompletionData?
 
   - Extension methods do not work properly, we need to know if the method is called as an extension method or not
   - get xml documentation, what's the best way?
      maybe this?: https://github.com/icsharpcode/NRefactory/blob/master/ICSharpCode.NRefactory/Documentation/XmlDocumentationProvider.cs
   - show overloads in description of completionWindow
-  - continuing of highlighting of method parameters 
+  - continuing of highlighting of method parameters after it was interrupted
 
 
 Attribution & License
