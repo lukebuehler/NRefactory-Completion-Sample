@@ -93,8 +93,7 @@ namespace CompletionSample.Completion
 		
 		ICompletionData ICompletionDataFactory.CreateNewOverrideCompletionData(int declarationBegin, IUnresolvedTypeDefinition type, IMember m)
 		{
-            return new CompletionData("TODO: override completion");
-			//return new OverrideCompletionData(declarationBegin, m, contextAtCaret);
+			return new OverrideCompletionData(declarationBegin, m, contextAtCaret);
 		}
 		
 		ICompletionData ICompletionDataFactory.CreateNewPartialCompletionData(int declarationBegin, IUnresolvedTypeDefinition type, IUnresolvedMember m)

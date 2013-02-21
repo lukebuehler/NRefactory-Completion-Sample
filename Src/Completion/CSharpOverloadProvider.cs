@@ -6,6 +6,7 @@ using ICSharpCode.NRefactory.CSharp.Completion;
 using Caliburn.Micro;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.NRefactory.Completion;
+using ICSharpCode.NRefactory.Editor;
 
 namespace CompletionSample.Completion
 {
@@ -24,9 +25,7 @@ namespace CompletionSample.Completion
             this.selectedIndex = 0;
             this.items = items.ToList();
 
-            var startsChar = context.Input[startOffset];
-            var subtext = context.Input.Substring(0, startOffset);
-            Update(context.Input, context.Offset, context.SourceFile);
+            Update(context.Document, context.Offset);
         }
 
         public bool RequestClose { get; set; }
@@ -68,9 +67,9 @@ namespace CompletionSample.Completion
             }
         }
 
-        public void Update(string input, int offset, string sourceFile)
+        public void Update(IDocument document, int offset)
         {
-            var completionContext = CSharpCompletionContext.Get(input, offset, sourceFile, context.ProjectContent);
+            var completionContext = new CSharpCompletionContext(document, offset, context.ProjectContent);
             if (completionContext == null)
             {
                 RequestClose = true;
@@ -86,7 +85,7 @@ namespace CompletionSample.Completion
                 completionContext.TypeResolveContextAtCaret
             );
 
-            var completionChar = completionContext.Input[completionContext.Offset - 1];
+            var completionChar = completionContext.Document.GetCharAt(completionContext.Offset);
             int parameterIndex = pce.GetCurrentParameterIndex(startOffset, completionContext.Offset);
             if (parameterIndex < 0)
             {

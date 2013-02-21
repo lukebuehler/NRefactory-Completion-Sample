@@ -11,19 +11,27 @@ public class Sample1
 	}
 
 	///<summary>
-	///
+	///Test
 	///</summary>
-    public int Add(int number1, int number2)
+    public virtual int Add(int number1, int number2)
     {
         number1 + number2;
     }
+}
+
+public class Sample2 : Sample1
+{
+	public event EventHandler<EventArgs> MyEvent;
+	public void Hello(){
+		MyEvent(this, new EventArgs());
+	}
 }
 
 public class OtherClass
 {
     public void GetSample1()
     {
-        var sample = new Sample1();
+        var sample = new Sample2();
         sample.Add(10,100);
     }
 }

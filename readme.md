@@ -4,9 +4,12 @@ This is a sample applications that shows how to do C# code completion in a text 
 
 It's a pretty full featured sample containing ctrl+space like code completion and method parameter completion. Also showing nice images for different types in the completion window.
 
+To get it to work properly I had to compile the latest verion of AvalonEdit, but compiled for VS 2010. The code can be found here:
+https://github.com/lukebuehler/AvalonEdit
+
 See:
- https://github.com/icsharpcode/NRefactory
- https://github.com/icsharpcode/SharpDevelop
+ * https://github.com/icsharpcode/NRefactory
+ * https://github.com/icsharpcode/SharpDevelop
 
 
 Known Issues
@@ -21,8 +24,6 @@ This is a work in progress and so currently there are quite a few bugs/issues wi
   - get xml documentation, what's the best way?
      maybe this?: https://github.com/icsharpcode/NRefactory/blob/master/ICSharpCode.NRefactory/Documentation/XmlDocumentationProvider.cs
   - show overloads in description of completionWindow
-  - continuing of highlighting of method parameters after it was interrupted
-
 
 Attribution & License
 =================================

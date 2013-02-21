@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.CSharp.Completion;
+using ICSharpCode.NRefactory.Editor;
 using ICSharpCode.NRefactory.TypeSystem;
 
 namespace CompletionSample.Completion
@@ -63,19 +64,19 @@ namespace CompletionSample.Completion
         }
 
 
-        public static CodeCompletionResult GetCompletions(string input, int offset, string sourceFile)
+        public static CodeCompletionResult GetCompletions(IDocument document, int offset)
         {
-            return GetCompletions(input, offset, sourceFile, false);
+            return GetCompletions(document, offset, false);
         }
 
-        public static CodeCompletionResult GetCompletions(string input, int offset, string sourceFile, bool controlSpace)
+        public static CodeCompletionResult GetCompletions(IDocument document, int offset, bool controlSpace)
         {
             var result = new CodeCompletionResult();
 
-            if (String.IsNullOrEmpty(sourceFile))
+            if (String.IsNullOrEmpty(document.FileName))
                 return result;
 
-            var completionContext = CSharpCompletionContext.Get(input, offset, sourceFile, projectContent);
+            var completionContext = new CSharpCompletionContext(document, offset, projectContent);
 
             var completionFactory = new CSharpCompletionDataFactory(completionContext.TypeResolveContextAtCaret, completionContext);
             var cce = new CSharpCompletionEngine(
@@ -89,7 +90,7 @@ namespace CompletionSample.Completion
             cce.EolMarker = Environment.NewLine;
             cce.FormattingPolicy = FormattingOptionsFactory.CreateSharpDevelop();
 
-            var completionChar = completionContext.Input[completionContext.Offset - 1];
+            var completionChar = completionContext.Document.GetCharAt(completionContext.Offset-1);
             int startPos, triggerWordLength;
             IEnumerable<ICSharpCode.NRefactory.Completion.ICompletionData> completionData;
             if (controlSpace)
@@ -109,7 +110,7 @@ namespace CompletionSample.Completion
 
                 if (char.IsLetterOrDigit(completionChar) || completionChar == '_')
                 {
-                    if (startPos > 1 && char.IsLetterOrDigit(completionContext.Input[startPos - 2]))
+                    if (startPos > 1 && char.IsLetterOrDigit(completionContext.Document.GetCharAt(startPos - 2)))
                         return result;
                     completionData = cce.GetCompletionData(startPos, false);
                     startPos--;
@@ -122,7 +123,7 @@ namespace CompletionSample.Completion
                 }
             }
             result.TriggerWordLength = triggerWordLength;
-            result.TriggerWord = completionContext.Input.Substring(completionContext.Offset - triggerWordLength, triggerWordLength);
+            result.TriggerWord = completionContext.Document.GetText(completionContext.Offset - triggerWordLength, triggerWordLength);
             Debug.Print("Trigger word: '{0}'", result.TriggerWord);
 
             //cast to AvalonEdit completion data and add to results

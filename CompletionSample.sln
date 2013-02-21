@@ -10,9 +10,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompletionSample", "Src\Com
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFiles", "SolutionFiles", "{B9D5B98A-8BA0-4332-9F94-626A51636AB0}"
 	ProjectSection(SolutionItems) = preProject
-		copyright.txt = copyright.txt
-		license.txt = license.txt
-		readme.txt = readme.txt
+		readme.md = readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{6055D402-CC45-4BC8-ADA2-41418A649C7A}"
+	ProjectSection(SolutionItems) = preProject
+		Doc\copyright.txt = Doc\copyright.txt
+		Doc\license.txt = Doc\license.txt
 	EndProjectSection
 EndProject
 Global

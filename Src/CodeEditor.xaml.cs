@@ -49,6 +49,7 @@ namespace CompletionSample
 
             FileName = fileName;
             textEditor.Load(fileName);
+            textEditor.Document.FileName = FileName;
 
             textEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(Path.GetExtension(fileName));
         }
@@ -95,7 +96,7 @@ namespace CompletionSample
                 CodeCompletionResult results = null;
                 try
                 {
-                    results = CSharpCompletion.GetCompletions(textEditor.Text, textEditor.CaretOffset, FileName, controlSpace);
+                    results = CSharpCompletion.GetCompletions(textEditor.Document, textEditor.CaretOffset, controlSpace);
                 }
                 catch (Exception exception)
                 {
@@ -139,7 +140,7 @@ namespace CompletionSample
                 if (provider != null)
                 {
                     //since the text has not been added yet we need to tread it as if the char has already been inserted
-                    provider.Update(textEditor.Text, textEditor.CaretOffset, FileName);
+                    provider.Update(textEditor.Document, textEditor.CaretOffset);
                     //if the windows is requested to be closed we do it here
                     if (provider.RequestClose)
                     {
