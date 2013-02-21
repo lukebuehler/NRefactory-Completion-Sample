@@ -3,6 +3,8 @@ using System.Linq;
 
 public class Sample1
 {
+	public event EventHandler<EventArgs> MyEvent;
+	
     public Sample1()
 	{
 		var a = "Hello";

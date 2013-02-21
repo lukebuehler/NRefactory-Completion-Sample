@@ -11,6 +11,7 @@ See:
  * https://github.com/icsharpcode/NRefactory
  * https://github.com/icsharpcode/SharpDevelop
 
+![Screenshot](https://github.com/lukebuehler/NRefactory-Completion-Sample/tree/master/Doc/Screenshot.png)
 
 Known Issues
 =================================
