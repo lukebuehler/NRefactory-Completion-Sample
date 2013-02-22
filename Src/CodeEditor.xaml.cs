@@ -84,11 +84,12 @@ namespace CompletionSample
                 Debug.WriteLine("Code Completion: Ctrl+Space");
 
             //only process csharp files
-            if(String.IsNullOrEmpty(FileName))
+            if (String.IsNullOrEmpty(textEditor.Document.FileName))
                 return;
-            var fileExtension = Path.GetExtension(FileName);
+            var fileExtension = Path.GetExtension(textEditor.Document.FileName);
             fileExtension = fileExtension != null ? fileExtension.ToLower() : null;
-            if (fileExtension == null || (fileExtension != ".cs"))
+            //check file extension to be a c# file (.cs, .csx, etc.)
+            if (fileExtension == null || (!fileExtension.StartsWith(".cs")))
                 return;
 
             if (completionWindow == null)
@@ -118,14 +119,20 @@ namespace CompletionSample
                 {
                     // Open code completion after the user has pressed dot:
                     completionWindow = new CompletionWindow(textEditor.TextArea);
-                    var list = new CompletionList();
+                    completionWindow.CloseWhenCaretAtBeginning = controlSpace;
+                    completionWindow.StartOffset -= results.TriggerWordLength;
+                    //completionWindow.EndOffset -= results.TriggerWordLength;
+
                     IList<ICompletionData> data = completionWindow.CompletionList.CompletionData;
-                    foreach (var completion in results.CompletionData)
+                    foreach (var completion in results.CompletionData.OrderBy(item => item.Text))
                     {
                         data.Add(completion);
                     }
                     if (results.TriggerWordLength > 0)
+                    {
+                        //completionWindow.CompletionList.IsFiltering = false;
                         completionWindow.CompletionList.SelectItem(results.TriggerWord);
+                    }
                     completionWindow.Show();
                     completionWindow.Closed += (o, args) => completionWindow = null;
                 }

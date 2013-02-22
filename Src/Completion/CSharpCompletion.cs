@@ -90,6 +90,7 @@ namespace CompletionSample.Completion
             cce.EolMarker = Environment.NewLine;
             cce.FormattingPolicy = FormattingOptionsFactory.CreateSharpDevelop();
 
+
             var completionChar = completionContext.Document.GetCharAt(completionContext.Offset-1);
             int startPos, triggerWordLength;
             IEnumerable<ICSharpCode.NRefactory.Completion.ICompletionData> completionData;
@@ -101,7 +102,7 @@ namespace CompletionSample.Completion
                     triggerWordLength = 0;
                 }
                 completionData = cce.GetCompletionData(startPos, true);
-                if(triggerWordLength == 0)
+                if (triggerWordLength == 0)
                     completionData = completionData.Concat(cce.GetImportCompletionData(startPos));
             }
             else
@@ -122,6 +123,7 @@ namespace CompletionSample.Completion
                     triggerWordLength = 0;
                 }
             }
+
             result.TriggerWordLength = triggerWordLength;
             result.TriggerWord = completionContext.Document.GetText(completionContext.Offset - triggerWordLength, triggerWordLength);
             Debug.Print("Trigger word: '{0}'", result.TriggerWord);

@@ -64,17 +64,7 @@ namespace CompletionSample.Completion
 
         public virtual void Complete(ICSharpCode.AvalonEdit.Editing.TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
         {
-            var replaceSegment = new ICSharpCode.AvalonEdit.Document.TextSegment();
-            replaceSegment.StartOffset = completionSegment.Offset;
-            replaceSegment.Length = completionSegment.Length;
-            replaceSegment.EndOffset = completionSegment.EndOffset;
-
-            //if text was entered before the code complete was called there might be some text before this segment that needs replacing,
-            // e.g., I type "DateT" and then press ctrl+space, then the insert needs to also replace the "DateT" part of the text.
-            replaceSegment.StartOffset -= TriggerWordLength;
-            replaceSegment.Length += TriggerWordLength;
-
-            textArea.Document.Replace(replaceSegment, this.CompletionText);
+            textArea.Document.Replace(completionSegment, this.CompletionText);
         }
 
         public object Content
@@ -87,9 +77,11 @@ namespace CompletionSample.Completion
             get { return this.Description; }
         }
 
+        private double priority = 1;
         public virtual double Priority
         {
-            get { return 1.0; }
+            get { return priority; }
+            set { priority = value; }
         }
 
         public string Text
@@ -97,6 +89,12 @@ namespace CompletionSample.Completion
             get { return this.CompletionText; }
         }
         #endregion
+
+        #region Equals, ToString, GetHashCode...
+        public override string ToString()
+        {
+            return DisplayText;
+        }
 
         public override bool Equals(object obj)
         {
@@ -108,7 +106,9 @@ namespace CompletionSample.Completion
         {
             return DisplayText.GetHashCode();
         }
-    }
+        #endregion
+    } //end class CompletionData
+
 
     class EntityCompletionData : CompletionData, IEntityCompletionData
     {
@@ -134,7 +134,7 @@ namespace CompletionSample.Completion
                 // Show fully qualified Type name
                 ambience.ConversionFlags |= ConversionFlags.UseFullyQualifiedTypeNames;
             }
-            this.Image = ClassBrowserIconService.GetIcon(entity).ImageSource;
+            this.Image = ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.GetImage(entity);
         }
 
         #region Description & Documentation
@@ -243,7 +243,8 @@ namespace CompletionSample.Completion
         }
 
         #endregion
-    }
+    } //end class EntityCompletionData
+
 
     /// <summary>
     /// Completion item that introduces a using declaration.
@@ -268,7 +269,8 @@ namespace CompletionSample.Completion
                 insertUsing = typeDef.Namespace;
             }
         }
-    }
+    } //end class ImportCompletionData
+
 
     internal class VariableCompletionData : CompletionData, IVariableCompletionData
     {
@@ -281,11 +283,11 @@ namespace CompletionSample.Completion
             DisplayText = variable.Name;
             Description = ambience.ConvertVariable(variable);
             CompletionText = Variable.Name;
-            this.Image = ClassBrowserIconService.GetIcon(variable).ImageSource;
+            this.Image = ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Field.BaseImage;
         }
 
         public IVariable Variable { get; private set; }
-    }
+    } //end class VariableCompletionData
 
 
     /// <summary>
@@ -306,6 +308,7 @@ namespace CompletionSample.Completion
             this.CompletionText = ambience.ConvertEntity(m);
         }
 
+        #region Complete Override
         public override void Complete(ICSharpCode.AvalonEdit.Editing.TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
         {
             if (declarationBegin > completionSegment.Offset)
@@ -382,6 +385,8 @@ namespace CompletionSample.Completion
                     yield return new IdentifierExpression(p.Name);
             }
         }
-    }
+        #endregion
+    }//end class OverrideCompletionData
+
 
 }//end namespace

@@ -5,11 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.CSharp.Completion;
 using ICSharpCode.NRefactory.CSharp.TypeSystem;
 using ICSharpCode.NRefactory.Completion;
 using ICSharpCode.NRefactory.TypeSystem;
+using ICompletionData = ICSharpCode.NRefactory.Completion.ICompletionData;
 
 namespace CompletionSample.Completion
 {
@@ -51,7 +53,7 @@ namespace CompletionSample.Completion
                 {
                     name = name.Substring(0, name.Length - "Attribute".Length);
                 }
-                return new CompletionData(name);
+                return new CompletionData(name);		
 			}
 		}
 		
@@ -65,14 +67,15 @@ namespace CompletionSample.Completion
 			return new CompletionData(title) {
 				Description = description,
 				CompletionText = insertText ?? title,
-				Image = ClassBrowserIconService.Keyword.ImageSource
+                Image = CompletionImage.Literal.BaseImage,
+                Priority = 2
 			};
 		}
 		
 		ICompletionData ICompletionDataFactory.CreateNamespaceCompletionData(INamespace name)
 		{
 			return new CompletionData(name.Name) {
-				Image = ClassBrowserIconService.Namespace.ImageSource
+                Image = CompletionImage.NamespaceImage,
 			};
 		}
 		

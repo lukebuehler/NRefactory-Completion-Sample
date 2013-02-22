@@ -1072,6 +1072,136 @@
             Gets the inorder predecessor of the node.
             </summary>
         </member>
+        <member name="T:ICSharpCode.AvalonEdit.Document.SimpleSegment">
+            <summary>
+            Represents a simple segment (Offset,Length pair) that is not automatically updated
+            on document changes.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.SimpleSegment.GetOverlap(ICSharpCode.NRefactory.Editor.ISegment,ICSharpCode.NRefactory.Editor.ISegment)">
+            <summary>
+            Gets the overlapping portion of the segments.
+            Returns SimpleSegment.Invalid if the segments don't overlap.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.SimpleSegment.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="T:ICSharpCode.AvalonEdit.Document.AnchorSegment">
+            <summary>
+            A segment using <see cref="T:ICSharpCode.AvalonEdit.Document.TextAnchor"/>s as start and end positions.
+            </summary>
+            <remarks>
+            <para>
+            For the constructors creating new anchors, the start position will be AfterInsertion and the end position will be BeforeInsertion.
+            Should the end position move before the start position, the segment will have length 0.
+            </para>
+            </remarks>
+            <seealso cref="T:ICSharpCode.NRefactory.Editor.ISegment"/>
+            <seealso cref="T:ICSharpCode.AvalonEdit.Document.TextSegment"/>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.AnchorSegment.#ctor(ICSharpCode.AvalonEdit.Document.TextAnchor,ICSharpCode.AvalonEdit.Document.TextAnchor)">
+            <summary>
+            Creates a new AnchorSegment using the specified anchors.
+            The anchors must have <see cref="P:ICSharpCode.AvalonEdit.Document.TextAnchor.SurviveDeletion"/> set to true.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.AnchorSegment.#ctor(ICSharpCode.AvalonEdit.Document.TextDocument,ICSharpCode.NRefactory.Editor.ISegment)">
+            <summary>
+            Creates a new AnchorSegment that creates new anchors.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.AnchorSegment.#ctor(ICSharpCode.AvalonEdit.Document.TextDocument,System.Int32,System.Int32)">
+            <summary>
+            Creates a new AnchorSegment that creates new anchors.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.AnchorSegment.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.Document.AnchorSegment.Offset">
+            <inheritdoc/>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.Document.AnchorSegment.Length">
+            <inheritdoc/>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.Document.AnchorSegment.EndOffset">
+            <inheritdoc/>
+        </member>
+        <member name="T:ICSharpCode.AvalonEdit.Document.RopeTextSource">
+            <summary>
+            Implements the ITextSource interface using a rope.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.#ctor(ICSharpCode.AvalonEdit.Utils.Rope{System.Char})">
+            <summary>
+            Creates a new RopeTextSource.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.#ctor(ICSharpCode.AvalonEdit.Utils.Rope{System.Char},ICSharpCode.NRefactory.Editor.ITextSourceVersion)">
+            <summary>
+            Creates a new RopeTextSource.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.GetRope">
+            <summary>
+            Returns a clone of the rope used for this text source.
+            </summary>
+            <remarks>
+            RopeTextSource only publishes a copy of the contained rope to ensure that the underlying rope cannot be modified.
+            </remarks>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.GetCharAt(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.GetText(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.GetText(ICSharpCode.NRefactory.Editor.ISegment)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.CreateReader">
+            <inheritdoc/>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.CreateReader(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.CreateSnapshot">
+            <inheritdoc/>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.CreateSnapshot(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.IndexOf(System.Char,System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.IndexOfAny(System.Char[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.LastIndexOf(System.Char,System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.IndexOf(System.String,System.Int32,System.Int32,System.StringComparison)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.LastIndexOf(System.String,System.Int32,System.Int32,System.StringComparison)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.WriteTextTo(System.IO.TextWriter)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.WriteTextTo(System.IO.TextWriter,System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.Document.RopeTextSource.Text">
+            <inheritdoc/>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.Document.RopeTextSource.TextLength">
+            <inheritdoc/>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.Document.RopeTextSource.Version">
+            <inheritdoc/>
+        </member>
         <member name="T:ICSharpCode.AvalonEdit.Document.DocumentLine">
             <summary>
             Represents a line inside a <see cref="T:ICSharpCode.AvalonEdit.Document.TextDocument"/>.
@@ -1175,6 +1305,121 @@
             Gets the previous line in the document.
             </summary>
             <returns>The line before this line, or null if this is the first line.</returns>
+        </member>
+        <member name="T:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage">
+            <summary>
+            Provides icons for code-completion.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.GetCompletionImage(ICSharpCode.NRefactory.TypeSystem.IEntity)">
+            <summary>
+            Gets the CompletionImage instance for the specified entity.
+            Returns null when no image is available for the entity type.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.GetCompletionImage(ICSharpCode.NRefactory.TypeSystem.IUnresolvedEntity)">
+            <summary>
+            Gets the CompletionImage instance for the specified entity.
+            Returns null when no image is available for the entity type.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.GetImage(ICSharpCode.NRefactory.TypeSystem.IEntity)">
+            <summary>
+            Gets the image for the specified entity.
+            Returns null when no image is available for the entity type.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.GetImage(ICSharpCode.NRefactory.TypeSystem.IUnresolvedEntity)">
+            <summary>
+            Gets the image for the specified entity.
+            Returns null when no image is available for the entity type.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.GetAccessibilityOverlay(ICSharpCode.NRefactory.TypeSystem.Accessibility)">
+            <summary>
+            Gets an overlay image for the specified accessibility.
+            Returns null if no overlay exists (for example, public members don't use overlays).
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.GetImage(ICSharpCode.NRefactory.TypeSystem.Accessibility,System.Boolean)">
+            <summary>
+            Gets this image combined with the specified accessibility overlay.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.NamespaceImage">
+            <summary>
+            Gets the image for namespaces.
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Class">
+            <summary>Gets the image used for non-static classes.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Struct">
+            <summary>Gets the image used for structs.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Interface">
+            <summary>Gets the image used for interfaces.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Delegate">
+            <summary>Gets the image used for delegates.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Enum">
+            <summary>Gets the image used for enums.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.StaticClass">
+            <summary>Gets the image used for modules/static classes.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Field">
+            <summary>Gets the image used for non-static classes.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.ReadOnlyField">
+            <summary>Gets the image used for structs.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Literal">
+            <summary>Gets the image used for constants.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.EnumValue">
+            <summary>Gets the image used for enum values.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Method">
+            <summary>Gets the image used for methods.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Constructor">
+            <summary>Gets the image used for constructos.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.VirtualMethod">
+            <summary>Gets the image used for virtual methods.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Operator">
+            <summary>Gets the image used for operators.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.ExtensionMethod">
+            <summary>Gets the image used for extension methods.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.PInvokeMethod">
+            <summary>Gets the image used for P/Invoke methods.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Property">
+            <summary>Gets the image used for properties.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Indexer">
+            <summary>Gets the image used for indexers.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Event">
+            <summary>Gets the image used for events.</summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.StaticOverlay">
+            <summary>
+            Gets the overlay image for the static modifier.
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.BaseImage">
+            <summary>
+            Gets the image without any overlays.
+            </summary>
         </member>
         <member name="T:ICSharpCode.AvalonEdit.Utils.TextFormatterFactory">
             <summary>
@@ -9360,251 +9605,6 @@
             beginning of the allowed range. This is useful in Ctrl+Space and "complete when typing",
             but not in dot-completion.
             Has no effect if CloseAutomatically is false.
-            </summary>
-        </member>
-        <member name="T:ICSharpCode.AvalonEdit.Document.RopeTextSource">
-            <summary>
-            Implements the ITextSource interface using a rope.
-            </summary>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.#ctor(ICSharpCode.AvalonEdit.Utils.Rope{System.Char})">
-            <summary>
-            Creates a new RopeTextSource.
-            </summary>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.#ctor(ICSharpCode.AvalonEdit.Utils.Rope{System.Char},ICSharpCode.NRefactory.Editor.ITextSourceVersion)">
-            <summary>
-            Creates a new RopeTextSource.
-            </summary>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.GetRope">
-            <summary>
-            Returns a clone of the rope used for this text source.
-            </summary>
-            <remarks>
-            RopeTextSource only publishes a copy of the contained rope to ensure that the underlying rope cannot be modified.
-            </remarks>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.GetCharAt(System.Int32)">
-            <inheritdoc/>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.GetText(System.Int32,System.Int32)">
-            <inheritdoc/>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.GetText(ICSharpCode.NRefactory.Editor.ISegment)">
-            <inheritdoc/>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.CreateReader">
-            <inheritdoc/>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.CreateReader(System.Int32,System.Int32)">
-            <inheritdoc/>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.CreateSnapshot">
-            <inheritdoc/>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.CreateSnapshot(System.Int32,System.Int32)">
-            <inheritdoc/>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.IndexOf(System.Char,System.Int32,System.Int32)">
-            <inheritdoc/>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.IndexOfAny(System.Char[],System.Int32,System.Int32)">
-            <inheritdoc/>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.LastIndexOf(System.Char,System.Int32,System.Int32)">
-            <inheritdoc/>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.IndexOf(System.String,System.Int32,System.Int32,System.StringComparison)">
-            <inheritdoc/>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.LastIndexOf(System.String,System.Int32,System.Int32,System.StringComparison)">
-            <inheritdoc/>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.WriteTextTo(System.IO.TextWriter)">
-            <inheritdoc/>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.RopeTextSource.WriteTextTo(System.IO.TextWriter,System.Int32,System.Int32)">
-            <inheritdoc/>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.Document.RopeTextSource.Text">
-            <inheritdoc/>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.Document.RopeTextSource.TextLength">
-            <inheritdoc/>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.Document.RopeTextSource.Version">
-            <inheritdoc/>
-        </member>
-        <member name="T:ICSharpCode.AvalonEdit.Document.SimpleSegment">
-            <summary>
-            Represents a simple segment (Offset,Length pair) that is not automatically updated
-            on document changes.
-            </summary>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.SimpleSegment.GetOverlap(ICSharpCode.NRefactory.Editor.ISegment,ICSharpCode.NRefactory.Editor.ISegment)">
-            <summary>
-            Gets the overlapping portion of the segments.
-            Returns SimpleSegment.Invalid if the segments don't overlap.
-            </summary>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.SimpleSegment.ToString">
-            <inheritdoc/>
-        </member>
-        <member name="T:ICSharpCode.AvalonEdit.Document.AnchorSegment">
-            <summary>
-            A segment using <see cref="T:ICSharpCode.AvalonEdit.Document.TextAnchor"/>s as start and end positions.
-            </summary>
-            <remarks>
-            <para>
-            For the constructors creating new anchors, the start position will be AfterInsertion and the end position will be BeforeInsertion.
-            Should the end position move before the start position, the segment will have length 0.
-            </para>
-            </remarks>
-            <seealso cref="T:ICSharpCode.NRefactory.Editor.ISegment"/>
-            <seealso cref="T:ICSharpCode.AvalonEdit.Document.TextSegment"/>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.AnchorSegment.#ctor(ICSharpCode.AvalonEdit.Document.TextAnchor,ICSharpCode.AvalonEdit.Document.TextAnchor)">
-            <summary>
-            Creates a new AnchorSegment using the specified anchors.
-            The anchors must have <see cref="P:ICSharpCode.AvalonEdit.Document.TextAnchor.SurviveDeletion"/> set to true.
-            </summary>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.AnchorSegment.#ctor(ICSharpCode.AvalonEdit.Document.TextDocument,ICSharpCode.NRefactory.Editor.ISegment)">
-            <summary>
-            Creates a new AnchorSegment that creates new anchors.
-            </summary>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.AnchorSegment.#ctor(ICSharpCode.AvalonEdit.Document.TextDocument,System.Int32,System.Int32)">
-            <summary>
-            Creates a new AnchorSegment that creates new anchors.
-            </summary>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.Document.AnchorSegment.ToString">
-            <inheritdoc/>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.Document.AnchorSegment.Offset">
-            <inheritdoc/>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.Document.AnchorSegment.Length">
-            <inheritdoc/>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.Document.AnchorSegment.EndOffset">
-            <inheritdoc/>
-        </member>
-        <member name="T:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage">
-            <summary>
-            Provides icons for code-completion.
-            </summary>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.GetCompletionImage(ICSharpCode.NRefactory.TypeSystem.IEntity)">
-            <summary>
-            Gets the CompletionImage instance for the specified entity.
-            Returns null when no image is available for the entity type.
-            </summary>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.GetCompletionImage(ICSharpCode.NRefactory.TypeSystem.IUnresolvedEntity)">
-            <summary>
-            Gets the CompletionImage instance for the specified entity.
-            Returns null when no image is available for the entity type.
-            </summary>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.GetImage(ICSharpCode.NRefactory.TypeSystem.IEntity)">
-            <summary>
-            Gets the image for the specified entity.
-            Returns null when no image is available for the entity type.
-            </summary>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.GetImage(ICSharpCode.NRefactory.TypeSystem.IUnresolvedEntity)">
-            <summary>
-            Gets the image for the specified entity.
-            Returns null when no image is available for the entity type.
-            </summary>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.GetAccessibilityOverlay(ICSharpCode.NRefactory.TypeSystem.Accessibility)">
-            <summary>
-            Gets an overlay image for the specified accessibility.
-            Returns null if no overlay exists (for example, public members don't use overlays).
-            </summary>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.GetImage(ICSharpCode.NRefactory.TypeSystem.Accessibility,System.Boolean)">
-            <summary>
-            Gets this image combined with the specified accessibility overlay.
-            </summary>
-        </member>
-        <member name="M:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.ToString">
-            <inheritdoc/>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.NamespaceImage">
-            <summary>
-            Gets the image for namespaces.
-            </summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Class">
-            <summary>Gets the image used for non-static classes.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Struct">
-            <summary>Gets the image used for structs.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Interface">
-            <summary>Gets the image used for interfaces.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Delegate">
-            <summary>Gets the image used for delegates.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Enum">
-            <summary>Gets the image used for enums.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.StaticClass">
-            <summary>Gets the image used for modules/static classes.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Field">
-            <summary>Gets the image used for non-static classes.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.ReadOnlyField">
-            <summary>Gets the image used for structs.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Literal">
-            <summary>Gets the image used for constants.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.EnumValue">
-            <summary>Gets the image used for enum values.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Method">
-            <summary>Gets the image used for methods.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Constructor">
-            <summary>Gets the image used for constructos.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.VirtualMethod">
-            <summary>Gets the image used for virtual methods.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Operator">
-            <summary>Gets the image used for operators.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.ExtensionMethod">
-            <summary>Gets the image used for extension methods.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.PInvokeMethod">
-            <summary>Gets the image used for P/Invoke methods.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Property">
-            <summary>Gets the image used for properties.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Indexer">
-            <summary>Gets the image used for indexers.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.Event">
-            <summary>Gets the image used for events.</summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.StaticOverlay">
-            <summary>
-            Gets the overlay image for the static modifier.
-            </summary>
-        </member>
-        <member name="P:ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.BaseImage">
-            <summary>
-            Gets the image without any overlays.
             </summary>
         </member>
         <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
