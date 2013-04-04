@@ -9,6 +9,6 @@
                 <MenuItem Header="Save File" Click="OnSaveFileClick"  />
             </MenuItem>
         </Menu>
-        <my:CodeEditor x:Name="codeEditor" />
+        <TabControl x:Name="tabs" />
     </DockPanel>
 </Window>

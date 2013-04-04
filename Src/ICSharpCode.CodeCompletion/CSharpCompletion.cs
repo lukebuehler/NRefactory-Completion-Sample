@@ -9,6 +9,8 @@ using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.CSharp.Completion;
 using ICSharpCode.NRefactory.Editor;
 using ICSharpCode.NRefactory.TypeSystem;
+using ICSharpCode.NRefactory.Documentation;
+using System.IO;
 
 namespace ICSharpCode.CodeCompletion
 {
@@ -37,10 +39,38 @@ namespace ICSharpCode.CodeCompletion
                 delegate(int i)
                 {
                     var loader = new CecilLoader();
+                    var path = assemblies[i].Location;
+                    loader.DocumentationProvider = GetXmlDocumentation(assemblies[i].Location);
                     unresolvedAssemblies[i] = loader.LoadAssemblyFile(assemblies[i].Location);
                 });
             Debug.WriteLine("Init project content, loading base assemblies: " + total.Elapsed);
             projectContent = projectContent.AddAssemblyReferences((IEnumerable<IUnresolvedAssembly>)unresolvedAssemblies);
+        }
+
+        public CSharpCompletion(ICSharpScriptProvider scriptProvider)
+            :this()
+        {
+            ScriptProvider = scriptProvider;
+        }
+
+        public ICSharpScriptProvider ScriptProvider { get; set; }
+
+        private XmlDocumentationProvider GetXmlDocumentation(string dllPath)
+        {
+            if(string.IsNullOrEmpty(dllPath))
+                return null;
+
+            var xmlFileName = Path.GetFileNameWithoutExtension(dllPath) + ".xml";
+            var localPath = Path.Combine(Path.GetDirectoryName(dllPath), xmlFileName);
+            if(File.Exists(localPath))
+                return new XmlDocumentationProvider(localPath);
+
+            //if it's a .NET framework assembly it's in one of following folders
+            var netPath = Path.Combine(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0", xmlFileName);
+            if (File.Exists(netPath))
+                return new XmlDocumentationProvider(netPath);
+
+            return null;
         }
 
         public void AddAssembly(string file)
@@ -49,6 +79,7 @@ namespace ICSharpCode.CodeCompletion
                 return;
 
             var loader = new CecilLoader();
+            loader.DocumentationProvider = GetXmlDocumentation(file);
             var unresolvedAssembly = loader.LoadAssemblyFile(file);
             projectContent = projectContent.AddAssemblyReferences(unresolvedAssembly);
         }
@@ -72,12 +103,16 @@ namespace ICSharpCode.CodeCompletion
 
         public CodeCompletionResult GetCompletions(IDocument document, int offset)
         {
-            return GetCompletions(document, offset, false, null);
+            return GetCompletions(document, offset, false);
         }
 
         public CodeCompletionResult GetCompletions(IDocument document, int offset, bool controlSpace)
         {
-            return GetCompletions(document, offset, controlSpace, null);
+            //get the using statements from the script provider
+            string usings = null;
+            if (ScriptProvider != null)
+                usings = ScriptProvider.GetUsing();
+            return GetCompletions(document, offset, controlSpace, usings);
         }
 
         public CodeCompletionResult GetCompletions(IDocument document, int offset, bool controlSpace, string usings)

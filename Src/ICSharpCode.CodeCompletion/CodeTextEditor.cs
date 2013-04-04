@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.NRefactory.Editor;
 
 namespace ICSharpCode.CodeCompletion
 {
@@ -82,21 +83,36 @@ namespace ICSharpCode.CodeCompletion
                 Debug.WriteLine("Code Completion: Ctrl+Space");
 
             //only process csharp files and if there is a code completion engine available
-            if (String.IsNullOrEmpty(Document.FileName) || Completion == null)
+            if (String.IsNullOrEmpty(Document.FileName))
+            {
+                Debug.WriteLine("No document file name, cannot run code completion");
                 return;
+            }
+
+
+            if (Completion == null)
+            {
+                Debug.WriteLine("Code completion is null, cannot run code completion");
+                return;
+            }
 
             var fileExtension = Path.GetExtension(Document.FileName);
             fileExtension = fileExtension != null ? fileExtension.ToLower() : null;
             //check file extension to be a c# file (.cs, .csx, etc.)
             if (fileExtension == null || (!fileExtension.StartsWith(".cs")))
+            {
+                Debug.WriteLine("Wrong file extension, cannot run code completion");
                 return;
+            }
 
             if (completionWindow == null)
             {
                 CodeCompletionResult results = null;
                 try
                 {
-                    results = Completion.GetCompletions(Document, CaretOffset, controlSpace);
+                    var offset = 0;
+                    var doc = GetCompletionDocument(out offset);
+                    results = Completion.GetCompletions(doc, offset, controlSpace);
                 }
                 catch (Exception exception)
                 {
@@ -146,7 +162,9 @@ namespace ICSharpCode.CodeCompletion
                 if (provider != null)
                 {
                     //since the text has not been added yet we need to tread it as if the char has already been inserted
-                    provider.Update(Document, CaretOffset);
+                    var offset = 0;
+                    var doc = GetCompletionDocument(out offset);
+                    provider.Update(doc, offset);
                     //if the windows is requested to be closed we do it here
                     if (provider.RequestClose)
                     {
@@ -171,6 +189,17 @@ namespace ICSharpCode.CodeCompletion
             }
             // Do not set e.Handled=true.
             // We still want to insert the character that was typed.
+        }
+
+        /// <summary>
+        /// Gets the document used for code completion, can be overridden to provide a custom document
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <returns>The document of this text editor.</returns>
+        protected virtual IDocument GetCompletionDocument(out int offset)
+        {
+            offset = CaretOffset;
+            return Document;
         }
         #endregion
 

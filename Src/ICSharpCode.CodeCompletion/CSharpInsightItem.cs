@@ -58,7 +58,7 @@ namespace ICSharpCode.CodeCompletion
         int highlightedParameterIndex = -1;
 
         public void HighlightParameter(int parameterIndex)
-        {
+        { 
             if (IsExtensionMethod)
                 parameterIndex++;
 
