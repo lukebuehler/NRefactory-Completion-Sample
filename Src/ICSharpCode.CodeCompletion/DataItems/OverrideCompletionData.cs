@@ -101,7 +101,12 @@ namespace ICSharpCode.CodeCompletion.DataItems
                 var segment = segmentDict[throwStatement];
                 textArea.Selection = new RectangleSelection(textArea, new TextViewPosition(textArea.Document.GetLocation(declarationBegin + segment.Offset)), new TextViewPosition(textArea.Document.GetLocation(declarationBegin + segment.Offset + segment.Length)));
             }
-            CSharpFormatter.Format(textArea.Document, declarationBegin, newText.Length, formattingOptions);
+
+            //format the inserted code nicely
+            var formatter = new CSharpFormatter(formattingOptions);
+            formatter.AddFormattingRegion(new DomRegion(document.GetLocation(declarationBegin), document.GetLocation(declarationBegin + newText.Length)));
+            var syntaxTree = new CSharpParser().Parse(document);
+            formatter.AnalyzeFormatting(document, syntaxTree).ApplyChanges();
         }
 
         IEnumerable<Expression> ParametersToExpressions(IEntity entity)

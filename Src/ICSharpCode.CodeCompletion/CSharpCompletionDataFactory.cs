@@ -174,7 +174,7 @@ namespace ICSharpCode.CodeCompletion
             return CreateMethodDataProvider(startOffset, new[] { type.GetDelegateInvokeMethod() });
         }
 
-        public IParameterDataProvider CreateIndexerParameterDataProvider(int startOffset, IType type, AstNode resolvedNode)
+        public IParameterDataProvider CreateIndexerParameterDataProvider(int startOffset, IType type, IEnumerable<IProperty> accessibleIndexers, AstNode resolvedNode)
         {
             throw new NotImplementedException();
             //return CreateMethodDataProvider(startOffset, accessibleIndexers);
@@ -184,6 +184,15 @@ namespace ICSharpCode.CodeCompletion
         {
             return null;
         }
+
+        public IParameterDataProvider CreateTypeParameterDataProvider(int startOffset, IEnumerable<IMethod> methods)
+        {
+            return CreateMethodDataProvider(startOffset, methods);
+        }
         #endregion
+
+
+
+        
     }
 }

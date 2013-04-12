@@ -18,10 +18,8 @@ Known Issues
 =================================
 This is a work in progress and so currently there are quite a few bugs/issues with the code completion. Hopefully they will be fixed soon.
 
-  - Extension methods do not work properly, we need to know if the method is called as an extension method or not
-  - get xml documentation, what's the best way? https://github.com/icsharpcode/NRefactory/blob/master/ICSharpCode.NRefactory/Documentation/XmlDocumentationProvider.cs
-  - show overloads in description of completionWindow
   - show InsightWindows when hovering over a type or method with the mouse.
+  - event completion
 
 Attribution & License
 =================================

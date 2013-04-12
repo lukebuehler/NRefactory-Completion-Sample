@@ -59,9 +59,6 @@ namespace ICSharpCode.CodeCompletion
 
         public void HighlightParameter(int parameterIndex)
         { 
-            if (IsExtensionMethod)
-                parameterIndex++;
-
             if (highlightedParameterIndex == parameterIndex)
                 return;
             this.highlightedParameterIndex = parameterIndex;
@@ -85,16 +82,6 @@ namespace ICSharpCode.CodeCompletion
         public object Content
         {
             get { return Documentation; }
-        }
-
-        public bool IsExtensionMethod
-        {
-            get
-            {
-                var im = Method as IMethod;
-                return im != null && im.IsExtensionMethod;
-            }
-
         }
 
         private string documentation;

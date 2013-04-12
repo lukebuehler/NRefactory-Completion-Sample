@@ -83,6 +83,14 @@ namespace ICSharpCode.CodeCompletion.DataItems
                 // Show fully qualified Type name
                 ambience.ConversionFlags |= ConversionFlags.UseFullyQualifiedTypeNames;
             }
+            if(entity is IMethod)
+            {
+                //if the method is an extension method we wanna see the whole method for the description
+                //the original method (not reduced) can be obtained by calling ReducedFrom
+                var reducedFromMethod = ((IMethod)entity).ReducedFrom;
+                if(reducedFromMethod != null)
+                    entity = reducedFromMethod;
+            }
             return ambience.ConvertEntity(entity);
         }
 
