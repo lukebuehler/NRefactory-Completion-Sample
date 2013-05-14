@@ -35,7 +35,12 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			if (rope == null)
 				throw new ArgumentNullException("rope");
-			if (length == 0)
+            //CHANGE: Fixes an issue if there's no line intendation in which under certain conditions causes an overflow since the length is -1
+
+            // the actual problem is found here: 
+            // ICSharpCode.NRefactory.Editor.ReadOnlyDocument.GetText
+            // ICSharpCode.NRefactory.CSharp.Completion.CSharpCompletionEngine.GetLineIndent, which should never call this method with a length of -1
+			if (length <= 0)
 				return string.Empty;
 			char[] buffer = new char[length];
 			rope.CopyTo(startIndex, buffer, 0, length);

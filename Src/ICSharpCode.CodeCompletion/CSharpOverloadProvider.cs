@@ -46,7 +46,7 @@ namespace ICSharpCode.CodeCompletion
             this.selectedIndex = 0;
             this.items = items.ToList();
 
-            Update(context.Document, context.Offset);
+            Update(context);
         }
 
         public bool RequestClose { get; set; }
@@ -91,12 +91,11 @@ namespace ICSharpCode.CodeCompletion
         public void Update(IDocument document, int offset)
         {
             var completionContext = new CSharpCompletionContext(document, offset, context.ProjectContent, context.OriginalUsings);
-            if (completionContext == null)
-            {
-                RequestClose = true;
-                return;
-            }
+            Update(completionContext);
+        }
 
+        public void Update(CSharpCompletionContext completionContext)
+        {
             var completionFactory = new CSharpCompletionDataFactory(completionContext.TypeResolveContextAtCaret, completionContext);
             var pce = new CSharpParameterCompletionEngine(
                 completionContext.Document,
@@ -106,7 +105,9 @@ namespace ICSharpCode.CodeCompletion
                 completionContext.TypeResolveContextAtCaret
             );
 
-            var completionChar = completionContext.Document.GetCharAt(completionContext.Offset);
+            var completionChar = completionContext.Document.GetCharAt(completionContext.Offset - 1);
+            var docText = completionContext.Document.Text;
+            Debug.Print("Update Completion char: '{0}'", completionChar);
             int parameterIndex = pce.GetCurrentParameterIndex(startOffset, completionContext.Offset);
             if (parameterIndex < 0)
             {

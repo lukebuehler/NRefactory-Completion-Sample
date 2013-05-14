@@ -96,7 +96,7 @@ namespace ICSharpCode.CodeCompletion.DataItems
 
         public static string XmlDocumentationToText(string xmlDoc)
         {
-            System.Diagnostics.Debug.WriteLine(xmlDoc);
+            //.Diagnostics.Debug.WriteLine(xmlDoc);
             StringBuilder b = new StringBuilder();
             try
             {
