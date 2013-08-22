@@ -62,7 +62,7 @@ namespace ICSharpCode.CodeCompletion
             };
         }
 
-        ICompletionData ICompletionDataFactory.CreateTypeCompletionData(IType type, bool showFullName, bool isInAttributeContext)
+        ICompletionData ICompletionDataFactory.CreateTypeCompletionData(IType type, bool showFullName, bool isInAttributeContext, bool addForTypeCreation)
         {
             var typeDef = type.GetDefinition();
             if (typeDef != null)
@@ -138,13 +138,23 @@ namespace ICSharpCode.CodeCompletion
             yield return new CompletionData("TEST");
         }
 
-        ICompletionData ICompletionDataFactory.CreateImportCompletionData(IType type, bool useFullName)
+        ICompletionData ICompletionDataFactory.CreateImportCompletionData(IType type, bool useFullName, bool addForTypeCreation)
         {
             ITypeDefinition typeDef = type.GetDefinition();
             if (typeDef != null)
                 return new ImportCompletionData(typeDef, contextAtCaret, useFullName);
             else
                 throw new InvalidOperationException("Should never happen");
+        }
+
+        ICompletionData ICompletionDataFactory.CreateFormatItemCompletionData(string format, string description, object example)
+        {
+            throw new NotImplementedException();
+        }
+
+        ICompletionData ICompletionDataFactory.CreateXmlDocCompletionData(string tag, string description = null, string tagInsertionText = null)
+        {
+            throw new NotImplementedException();
         }
         #endregion
 
@@ -191,8 +201,5 @@ namespace ICSharpCode.CodeCompletion
         }
         #endregion
 
-
-
-        
     }
 }
