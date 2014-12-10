@@ -34,7 +34,7 @@ namespace ICSharpCode.CodeCompletion.DataItems
             if (useFullName)
             {
                 var astBuilder = new TypeSystemAstBuilder(new CSharpResolver(contextAtCaret));
-                insertionText = astBuilder.ConvertType(typeDef).GetText();
+                insertionText = astBuilder.ConvertType(typeDef).ToString(null);
             }
             else
             {

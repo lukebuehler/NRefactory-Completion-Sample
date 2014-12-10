@@ -25,8 +25,8 @@ namespace ICSharpCode.CodeCompletion
 {
     public class CodeCompletionResult
     {
-        public List<ICSharpCode.AvalonEdit.CodeCompletion.ICompletionData> CompletionData = new List<ICompletionData>();
-        public ICSharpCode.AvalonEdit.CodeCompletion.ICompletionData SuggestedCompletionDataItem;
+        public List<ICompletionData> CompletionData = new List<ICompletionData>();
+        public ICompletionData SuggestedCompletionDataItem;
         public int TriggerWordLength;
         public string TriggerWord;
 

@@ -2,19 +2,12 @@
 // This code is distributed under the GNU LGPL (for details please see \doc\license.txt)
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.CSharp.Refactoring;
-using ICSharpCode.NRefactory.CSharp.Resolver;
-using ICSharpCode.NRefactory.CSharp.TypeSystem;
 using ICSharpCode.NRefactory.Completion;
-using ICSharpCode.NRefactory.Editor;
 using ICSharpCode.NRefactory.TypeSystem;
 
 namespace ICSharpCode.CodeCompletion.DataItems
@@ -36,14 +29,14 @@ namespace ICSharpCode.CodeCompletion.DataItems
             IAmbience ambience = new CSharpAmbience();
             ambience.ConversionFlags = entity is ITypeDefinition ? ConversionFlags.ShowTypeParameterList : ConversionFlags.None;
             DisplayText = entity.Name;
-            this.CompletionText = ambience.ConvertEntity(entity);
+            CompletionText = ambience.ConvertSymbol(entity);
             ambience.ConversionFlags = ConversionFlags.StandardConversionFlags;
             if (entity is ITypeDefinition)
             {
                 // Show fully qualified Type name
                 ambience.ConversionFlags |= ConversionFlags.UseFullyQualifiedTypeNames;
             }
-            this.Image = ICSharpCode.AvalonEdit.CodeCompletion.CompletionImage.GetImage(entity);
+            Image = AvalonEdit.CodeCompletion.CompletionImage.GetImage(entity);
         }
 
         #region Description & Documentation
