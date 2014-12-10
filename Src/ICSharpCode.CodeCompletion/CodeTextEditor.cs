@@ -13,8 +13,8 @@ namespace ICSharpCode.CodeCompletion
 {
     public class CodeTextEditor : AvalonEdit.TextEditor
     {
-        CompletionWindow completionWindow;
-        OverloadInsightWindow insightWindow;
+        protected CompletionWindow completionWindow;
+        protected OverloadInsightWindow insightWindow;
 
         public CodeTextEditor()
         {
@@ -33,7 +33,7 @@ namespace ICSharpCode.CodeCompletion
         public CSharpCompletion Completion { get; set; }
 
         #region Open & Save File
-        public string FileName { get; private set; }
+        public string FileName { get; set; }
 
 
         public void OpenFile(string fileName)
