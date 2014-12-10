@@ -38,7 +38,7 @@ namespace ICSharpCode.CodeCompletion.DataItems
         }
 
         #region Complete Override
-        public override void Complete(ICSharpCode.AvalonEdit.Editing.TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
+        public override void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
         {
             if (declarationBegin > completionSegment.Offset)
             {

@@ -654,6 +654,11 @@
             <param name="cancellationToken">Optional: cancellation token.</param>
             <returns>Parsed tag soup.</returns>
         </member>
+        <member name="M:ICSharpCode.NRefactory.Xml.AXmlParser.IsValidXmlName(System.String)">
+            <summary>
+            Checks whether the given name is a valid XML name.
+            </summary>
+        </member>
         <member name="P:ICSharpCode.NRefactory.Xml.AXmlParser.UnknownEntityReferenceIsError">
             <summary>
             Generate syntax error when seeing entity reference other then the built-in ones

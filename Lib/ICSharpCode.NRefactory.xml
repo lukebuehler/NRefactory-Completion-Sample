@@ -1143,11 +1143,6 @@
             </code>
             </summary>
         </member>
-        <member name="M:ICSharpCode.NRefactory.AbstractAnnotatable.ClearAnnotations">
-            <summary>
-            Removes all annotations.
-            </summary>
-        </member>
         <member name="P:ICSharpCode.NRefactory.AbstractAnnotatable.Annotations">
             <summary>
             Gets all annotations stored on this AstNode.
@@ -1234,6 +1229,8 @@
             Creates a new XmlDocumentationProvider.
             </summary>
             <param name="fileName">Name of the .xml file.</param>
+            <exception cref="T:System.IO.IOException">Error reading from XML file (or from redirected file)</exception>
+            <exception cref="T:System.Xml.XmlException">Invalid XML file</exception>
         </member>
         <member name="M:ICSharpCode.NRefactory.Documentation.XmlDocumentationProvider.LookupLocalizedXmlDoc(System.String)">
             <summary>
@@ -1387,7 +1384,7 @@
         </member>
         <member name="T:ICSharpCode.NRefactory.Semantics.SizeOfResolveResult">
             <summary>
-            Represents the 'typeof'.
+            Represents the 'sizeof'.
             </summary>
         </member>
         <member name="P:ICSharpCode.NRefactory.Semantics.SizeOfResolveResult.ReferencedType">
@@ -2282,6 +2279,11 @@
             Interface for type system symbols.
             </summary>
         </member>
+        <member name="M:ICSharpCode.NRefactory.TypeSystem.ISymbol.ToReference">
+            <summary>
+            Creates a symbol reference that can be used to rediscover this symbol in another compilation.
+            </summary>
+        </member>
         <member name="P:ICSharpCode.NRefactory.TypeSystem.ISymbol.SymbolKind">
             <summary>
             This property returns an enum specifying which kind of symbol this is
@@ -2384,6 +2386,15 @@
             </summary>
         </member>
         <member name="M:ICSharpCode.NRefactory.TypeSystem.IMember.ToMemberReference">
+            <summary>
+            Creates a member reference that can be used to rediscover this member in another compilation.
+            </summary>
+            <remarks>
+            If this member is specialized using open generic types, the resulting member reference will need to be looked up in an appropriate generic context.
+            Otherwise, the main resolve context of a compilation is sufficient.
+            </remarks>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.TypeSystem.IMember.ToReference">
             <summary>
             Creates a member reference that can be used to rediscover this member in another compilation.
             </summary>
@@ -2651,6 +2662,12 @@
             This method assumes that for an unknown end the end line is == -1
             </remarks>
         </member>
+        <member name="M:ICSharpCode.NRefactory.TypeSystem.DomRegion.Contains(System.Int32,System.Int32)">
+            <remarks>
+            Returns true, if the given coordinates (line, column) are in the region.
+            This method assumes that for an unknown end the end line is == -1
+            </remarks>
+        </member>
         <member name="P:ICSharpCode.NRefactory.TypeSystem.DomRegion.EndLine">
             <value>
             if the end line is == -1 the end column is -1 too
@@ -2707,6 +2724,33 @@
             The accessor method for a property getter/setter or event add/remove.
             </summary>
             <seealso cref="T:ICSharpCode.NRefactory.TypeSystem.IMethod"/>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.TypeSystem.ITypeResolveContext.CurrentAssembly">
+            <summary>
+            Gets the current assembly.
+            This property may return null if this context does not specify any assembly.
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.TypeSystem.ITypeResolveContext.CurrentTypeDefinition">
+            <summary>
+            Gets the current type definition.
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.TypeSystem.ITypeResolveContext.CurrentMember">
+            <summary>
+            Gets the current member.
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.TypeSystem.ICodeContext.LocalVariables">
+            <summary>
+            Gets all currently visible local variables and lambda parameters.
+            Does not include method parameters.
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.TypeSystem.ICodeContext.IsWithinLambdaExpression">
+            <summary>
+            Gets whether the context is within a lambda expression or anonymous method.
+            </summary>
         </member>
         <member name="T:ICSharpCode.NRefactory.TypeSystem.Implementation.DefaultVariable">
             <summary>
@@ -2854,6 +2898,28 @@
         </member>
         <member name="F:ICSharpCode.NRefactory.TypeSystem.SymbolKind.TypeParameter">
             <seealso cref="T:ICSharpCode.NRefactory.TypeSystem.ITypeParameter"/>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.TypeSystem.TaskType">
+            <summary>
+            Helper class for dealing with System.Threading.Tasks.Task.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.TypeSystem.TaskType.UnpackTask(ICSharpCode.NRefactory.TypeSystem.ICompilation,ICSharpCode.NRefactory.TypeSystem.IType)">
+            <summary>
+            Gets the T in Task&lt;T&gt;.
+            Returns void for non-generic Task.
+            Any other type is returned unmodified.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.TypeSystem.TaskType.IsTask(ICSharpCode.NRefactory.TypeSystem.IType)">
+            <summary>
+            Gets whether the specified type is Task or Task&lt;T&gt;.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.TypeSystem.TaskType.Create(ICSharpCode.NRefactory.TypeSystem.ICompilation,ICSharpCode.NRefactory.TypeSystem.IType)">
+            <summary>
+            Creates a task type.
+            </summary>
         </member>
         <member name="T:ICSharpCode.NRefactory.TypeSystem.TypeParameterSubstitution">
             <summary>
@@ -3065,6 +3131,12 @@
             This may include types from referenced assemblies that are not accessible in the main assembly.
             </summary>
         </member>
+        <member name="M:ICSharpCode.NRefactory.TypeSystem.TypeSystemExtensions.GetTopLevelTypeDefinitons(ICSharpCode.NRefactory.TypeSystem.ICompilation)">
+            <summary>
+            Gets all top level type definitions in the compilation.
+            This may include types from referenced assemblies that are not accessible in the main assembly.
+            </summary>
+        </member>
         <member name="M:ICSharpCode.NRefactory.TypeSystem.TypeSystemExtensions.GetInnermostTypeDefinition(ICSharpCode.NRefactory.TypeSystem.IUnresolvedFile,System.Int32,System.Int32)">
             <summary>
             Gets the type (potentially a nested type) defined at the specified location.
@@ -3172,6 +3244,21 @@
             <returns>
             Returns the list of attributes that were found.
             If inherit is true, attributes from the entity itself are returned first; followed by attributes inherited from the base entity.
+            </returns>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.TypeSystem.TypeSystemExtensions.GetAttributes(ICSharpCode.NRefactory.TypeSystem.IEntity,System.Boolean)">
+            <summary>
+            Gets the attribute of the specified attribute type (or derived attribute types).
+            </summary>
+            <param name="entity">The entity on which the attributes are declared.</param>
+            <param name="inherit">
+            Specifies whether attributes inherited from base classes and base members (if the given <paramref name="entity"/> in an <c>override</c>)
+            should be returned. The default is <c>true</c>.
+            </param>
+            <returns>
+            Returns the attribute that was found; or <c>null</c> if none was found.
+            If inherit is true, an from the entity itself will be returned if possible;
+            and the base entity will only be searched if none exists.
             </returns>
         </member>
         <member name="M:ICSharpCode.NRefactory.TypeSystem.TypeSystemExtensions.GetTypeDefinition(ICSharpCode.NRefactory.TypeSystem.IAssembly,System.String,System.String,System.Int32)">
@@ -3319,6 +3406,16 @@
             <summary>
             For fields, events and methods: adds a semicolon at the end.
             For properties: shows "{ get; }" or similar.
+            </summary>
+        </member>
+        <member name="F:ICSharpCode.NRefactory.TypeSystem.ConversionFlags.UseFullyQualifiedEntityNames">
+            <summary>
+            Use fully qualified names for members.
+            </summary>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.TypeSystem.IAmbience">
+            <summary>
+            Ambiences are used to convert type system symbols to text (usually for displaying the symbol to the user; e.g. in editor tooltips).
             </summary>
         </member>
         <member name="T:ICSharpCode.NRefactory.TypeSystem.IUnresolvedAssembly">
@@ -3813,6 +3910,12 @@
             Otherwise, returns null.
             </summary>
         </member>
+        <member name="M:ICSharpCode.NRefactory.TypeSystem.Implementation.FreezableHelper.GetFrozenClone``1(``0)">
+            <summary>
+            If the item is not frozen, this method creates and returns a frozen clone.
+            If the item is already frozen, it is returned without creating a clone.
+            </summary>
+        </member>
         <member name="M:ICSharpCode.NRefactory.TypeSystem.Implementation.AbstractFreezable.Freeze">
             <summary>
             Freezes this instance.
@@ -4058,6 +4161,11 @@
             Gets whether this type contains extension methods.
             </summary>
             <remarks>This property is used to speed up the search for extension methods.</remarks>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.TypeSystem.ITypeDefinition.IsPartial">
+            <summary>
+            Gets whether this type definition is made up of one or more partial classes.
+            </summary>
         </member>
         <member name="T:ICSharpCode.NRefactory.TypeSystem.Implementation.DefaultUnresolvedAssembly">
             <summary>
@@ -4306,6 +4414,11 @@
             Gets whether the type definition contains extension methods.
             Returns null when the type definition needs to be resolved in order to determine whether
             methods are extension methods.
+            </summary>
+        </member>
+        <member name="P:ICSharpCode.NRefactory.TypeSystem.IUnresolvedTypeDefinition.IsPartial">
+            <summary>
+            Gets whether the partial modifier is set on this part of the type definition.
             </summary>
         </member>
         <member name="P:ICSharpCode.NRefactory.TypeSystem.IUnresolvedTypeDefinition.AddDefaultConstructorIfRequired">
@@ -4823,22 +4936,6 @@
         <member name="F:ICSharpCode.NRefactory.TypeSystem.VarianceModifier.Contravariant">
             <summary>
             The type parameter is contravariant (used in input position).
-            </summary>
-        </member>
-        <member name="P:ICSharpCode.NRefactory.TypeSystem.ITypeResolveContext.CurrentAssembly">
-            <summary>
-            Gets the current assembly.
-            This property may return null if this context does not specify any assembly.
-            </summary>
-        </member>
-        <member name="P:ICSharpCode.NRefactory.TypeSystem.ITypeResolveContext.CurrentTypeDefinition">
-            <summary>
-            Gets the current type definition.
-            </summary>
-        </member>
-        <member name="P:ICSharpCode.NRefactory.TypeSystem.ITypeResolveContext.CurrentMember">
-            <summary>
-            Gets the current member.
             </summary>
         </member>
         <member name="T:ICSharpCode.NRefactory.TypeSystem.KnownTypeCode">
@@ -6109,7 +6206,7 @@
             the constructors and destructor names should change as well.
             </summary>
         </member>
-        <member name="M:ICSharpCode.NRefactory.Analysis.SymbolCollector.GetRelatedSymbols(ICSharpCode.NRefactory.Analysis.TypeGraph,ICSharpCode.NRefactory.TypeSystem.ISymbol)">
+        <member name="M:ICSharpCode.NRefactory.Analysis.SymbolCollector.GetRelatedSymbols(System.Lazy{ICSharpCode.NRefactory.Analysis.TypeGraph},ICSharpCode.NRefactory.TypeSystem.ISymbol)">
             <summary>
             Gets the related symbols.
             </summary>
@@ -6235,6 +6332,26 @@
             <param name="curChar">The current character.</param>
             <param name="nextChar">The next character (if != LF then length will always be 0 or 1).</param>
         </member>
+        <member name="M:ICSharpCode.NRefactory.NewLine.TryGetDelimiterLengthAndType(System.Char,System.Int32@,ICSharpCode.NRefactory.UnicodeNewline@,System.Func{System.Char})">
+            <summary>
+            Determines if a char is a new line delimiter.
+            </summary>
+            <returns>0 == no new line, otherwise it returns either 1 or 2 depending of the length of the delimiter.</returns>
+            <param name="curChar">The current character.</param>
+            <param name = "length">The length of the delimiter</param>
+            <param name = "type">The type of the delimiter</param>
+            <param name="nextChar">A callback getting the next character (may be null).</param>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.NewLine.TryGetDelimiterLengthAndType(System.Char,System.Int32@,ICSharpCode.NRefactory.UnicodeNewline@,System.Char)">
+            <summary>
+            Determines if a char is a new line delimiter.
+            </summary>
+            <returns>0 == no new line, otherwise it returns either 1 or 2 depending of the length of the delimiter.</returns>
+            <param name="curChar">The current character.</param>
+            <param name = "length">The length of the delimiter</param>
+            <param name = "type">The type of the delimiter</param>
+            <param name="nextChar">The next character (if != LF then length will always be 0 or 1).</param>
+        </member>
         <member name="M:ICSharpCode.NRefactory.NewLine.GetDelimiterType(System.Char,System.Func{System.Char})">
             <summary>
             Gets the new line type of a given char/next char.
@@ -6291,6 +6408,7 @@
             </summary>
             <returns>The assemblies the type may be defined (if any).</returns>
             <param name="resolveResult">The resolve result.</param>
+            <param name="fullMemberName"></param>
             <param name="typeParameterCount">Type parameter count.</param>
             <param name="isInsideAttributeType">If set to <c>true</c> this resolve result may be inside an attribute.</param>
         </member>
@@ -6363,6 +6481,29 @@
             Matches any node.
             </summary>
             <remarks>Does not match null nodes.</remarks>
+        </member>
+        <member name="T:ICSharpCode.NRefactory.Editor.ITextPasteHandler">
+            <summary>
+            The text paste handler can do formattings to a text that is about to be pasted
+            into the text document.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Editor.ITextPasteHandler.FormatPlainText(System.Int32,System.String,System.Byte[])">
+            <summary>
+            Formats plain text that is inserted at a specified offset.
+            </summary>
+            <returns>
+            The text that will get inserted at that position.
+            </returns>
+            <param name="offset">The offset where the text will be inserted.</param>
+            <param name="text">The text to be inserted.</param>
+            <param name="copyData">Additional data in case the text was copied from a Mono.TextEditor.</param>
+        </member>
+        <member name="M:ICSharpCode.NRefactory.Editor.ITextPasteHandler.GetCopyData(ICSharpCode.NRefactory.Editor.ISegment)">
+            <summary>
+            Gets the copy data for a specific segment inside the document. This can contain additional information.
+            </summary>
+            <param name="segment">The text segment that is about to be copied.</param>
         </member>
     </members>
 </doc>
