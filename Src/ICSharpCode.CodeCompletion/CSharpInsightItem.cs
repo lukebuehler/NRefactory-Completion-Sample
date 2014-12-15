@@ -20,7 +20,6 @@
 //   This code is distributed under the GNU LGPL (for details please see \Doc\COPYING.LESSER.txt)
 #endregion
 
-using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -71,12 +70,14 @@ namespace ICSharpCode.CodeCompletion
             CSharpAmbience ambience = new CSharpAmbience();
             ambience.ConversionFlags = ConversionFlags.StandardConversionFlags;
             var stringBuilder = new StringBuilder();
-            var formatter = new ParameterHighlightingOutputFormatter(stringBuilder, highlightedParameterIndex);
-            ambience.ConvertEntity(Method, formatter, FormattingOptionsFactory.CreateSharpDevelop());
-            var inlineBuilder = new HighlightedInlineBuilder(stringBuilder.ToString());
-            inlineBuilder.SetFontWeight(formatter.parameterStartOffset, formatter.parameterLength, FontWeights.Bold);
-            header.Inlines.Clear();
-            header.Inlines.AddRange(inlineBuilder.CreateRuns());
+            //var formatter = new ParameterHighlightingOutputFormatter(stringBuilder, highlightedParameterIndex);
+            //ambience.ConvertEntity(Method, formatter, FormattingOptionsFactory.CreateSharpDevelop());
+            //TokenWriter customConverter = new TextWriterTokenWriter();
+            //ambience.ConvertSymbol(Method, customConverter, FormattingOptionsFactory.CreateSharpDevelop());
+            //var inlineBuilder = new HighlightedInlineBuilder(stringBuilder.ToString());
+            //inlineBuilder.SetFontWeight(formatter.parameterStartOffset, formatter.parameterLength, FontWeights.Bold);
+            //header.Inlines.Clear();
+            //header.Inlines.AddRange(inlineBuilder.CreateRuns());
         }
 
         public object Content
@@ -100,40 +101,5 @@ namespace ICSharpCode.CodeCompletion
             }
         }
 
-        sealed class ParameterHighlightingOutputFormatter : TextWriterOutputFormatter
-        {
-            StringBuilder b;
-            int highlightedParameterIndex;
-            int parameterIndex;
-            internal int parameterStartOffset;
-            internal int parameterLength;
-
-            public ParameterHighlightingOutputFormatter(StringBuilder b, int highlightedParameterIndex)
-                : base(new StringWriter(b))
-            {
-                this.b = b;
-                this.highlightedParameterIndex = highlightedParameterIndex;
-            }
-
-            public override void StartNode(AstNode node)
-            {
-                if (parameterIndex == highlightedParameterIndex && node is ParameterDeclaration)
-                {
-                    parameterStartOffset = b.Length;
-                }
-                base.StartNode(node);
-            }
-
-            public override void EndNode(AstNode node)
-            {
-                base.EndNode(node);
-                if (node is ParameterDeclaration)
-                {
-                    if (parameterIndex == highlightedParameterIndex)
-                        parameterLength = b.Length - parameterStartOffset;
-                    parameterIndex++;
-                }
-            }
-        }
     }
 }

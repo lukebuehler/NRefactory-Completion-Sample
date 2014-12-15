@@ -5,15 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Xml;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.CSharp.Refactoring;
 using ICSharpCode.NRefactory.CSharp.Resolver;
 using ICSharpCode.NRefactory.CSharp.TypeSystem;
-using ICSharpCode.NRefactory.Completion;
 using ICSharpCode.NRefactory.Editor;
 using ICSharpCode.NRefactory.TypeSystem;
 
@@ -32,22 +29,28 @@ namespace ICSharpCode.CodeCompletion.DataItems
         {
             this.declarationBegin = declarationBegin;
             this.contextAtCaret = contextAtCaret;
-            var ambience = new CSharpAmbience();
-            ambience.ConversionFlags = ConversionFlags.ShowTypeParameterList | ConversionFlags.ShowParameterList | ConversionFlags.ShowParameterNames;
-            this.CompletionText = ambience.ConvertEntity(m);
+            var ambience = new CSharpAmbience
+            {
+                ConversionFlags =
+                    ConversionFlags.ShowTypeParameterList | ConversionFlags.ShowParameterList |
+                    ConversionFlags.ShowParameterNames
+            };
+            this.CompletionText = ambience.ConvertSymbol(m);
         }
 
         #region Complete Override
-        public override void Complete(ICSharpCode.AvalonEdit.Editing.TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
+        public override void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
         {
             if (declarationBegin > completionSegment.Offset)
             {
                 base.Complete(textArea, completionSegment, insertionRequestEventArgs);
                 return;
             }
-            TypeSystemAstBuilder b = new TypeSystemAstBuilder(new CSharpResolver(contextAtCaret));
-            b.ShowTypeParameterConstraints = false;
-            b.GenerateBody = true;
+            var b = new TypeSystemAstBuilder(new CSharpResolver(contextAtCaret))
+            {
+                ShowTypeParameterConstraints = false,
+                GenerateBody = true
+            };
 
             var entityDeclaration = b.ConvertEntity(this.Entity);
             entityDeclaration.Modifiers &= ~(Modifiers.Virtual | Modifiers.Abstract);
@@ -56,7 +59,7 @@ namespace ICSharpCode.CodeCompletion.DataItems
             if (!this.Entity.IsAbstract)
             {
                 // modify body to call the base method
-                if (this.Entity.EntityType == EntityType.Method)
+                if (this.Entity.SymbolKind == SymbolKind.Method)
                 {
                     var baseCall = new BaseReferenceExpression().Invoke(this.Entity.Name, ParametersToExpressions(this.Entity));
                     var body = entityDeclaration.GetChildByRole(Roles.Body);
@@ -66,10 +69,10 @@ namespace ICSharpCode.CodeCompletion.DataItems
                     else
                         body.Statements.Add(new ReturnStatement(baseCall));
                 }
-                else if (this.Entity.EntityType == EntityType.Indexer || this.Entity.EntityType == EntityType.Property)
+                else if (this.Entity.SymbolKind == SymbolKind.Indexer || this.Entity.SymbolKind == SymbolKind.Property)
                 {
                     Expression baseCall;
-                    if (this.Entity.EntityType == EntityType.Indexer)
+                    if (this.Entity.SymbolKind == SymbolKind.Indexer)
                         baseCall = new BaseReferenceExpression().Indexer(ParametersToExpressions(this.Entity));
                     else
                         baseCall = new BaseReferenceExpression().Member(this.Entity.Name);
