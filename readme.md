@@ -25,5 +25,5 @@ Attribution & License
 =================================
 Most of the code is extracted from different versions of SharpDevelop especially the newNR branch and NRefactory. So all the props go the the makers of NRefactory and SharpDevelop.
 The completion icons come from SharpDevelop as well. 
-The rest of the code was developed by lukebuehler and is released under the GNU LGPL license.
+The rest of the code was developed by lukebuehler and is released under the MIT license.
 
