@@ -22,7 +22,7 @@ namespace ICSharpCode.CodeCompletion.Sample
 
         public string GetVars()
         {
-            return null;
+            return "int age = 25;";
         }
     }
 }

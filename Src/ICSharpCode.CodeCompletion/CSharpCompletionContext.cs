@@ -32,6 +32,7 @@ namespace ICSharpCode.CodeCompletion
         public readonly IDocument OriginalDocument;
         public readonly int OriginalOffset;
         public readonly string OriginalUsings;
+        public readonly string OriginalVariables;
 
         public readonly int Offset;
         public readonly IDocument Document;
@@ -48,14 +49,16 @@ namespace ICSharpCode.CodeCompletion
         /// <param name="offset">The offset.</param>
         /// <param name="projectContent">Content of the project.</param>
         /// <param name="usings">The usings.</param>
-        public CSharpCompletionContext(IDocument document, int offset, IProjectContent projectContent, string usings = null)
+        /// <param name="variables">The variables</param>
+        public CSharpCompletionContext(IDocument document, int offset, IProjectContent projectContent, string usings = null, string variables = null)
         {
             OriginalDocument = document;
             OriginalOffset = offset;
             OriginalUsings = usings;
+            OriginalVariables = variables;
 
             //if the document is a c# script we have to soround the document with some code.
-            Document = PrepareCompletionDocument(document, ref offset, usings);
+            Document = PrepareCompletionDocument(document, ref offset, usings, variables);
             Offset = offset;
 
             var syntaxTree = new CSharpParser().Parse(Document, Document.FileName);
@@ -73,7 +76,7 @@ namespace ICSharpCode.CodeCompletion
         }
 
         private static Regex replaceRegex = new Regex("[^a-zA-Z0-9_]");
-        private static IDocument PrepareCompletionDocument(IDocument document, ref int offset, string usings = null)
+        private static IDocument PrepareCompletionDocument(IDocument document, ref int offset, string usings = null, string variables = null)
         {
             if (String.IsNullOrEmpty(document.FileName))
                 return document;
@@ -88,21 +91,24 @@ namespace ICSharpCode.CodeCompletion
 
             if (fileExtension.ToLower() == ".csx")
             {
-                var className = replaceRegex.Replace(fileNameWithoutExtension, "");
-                className = className.TrimStart('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'); //there can be no number at the beginning of the class name
-                var header = "";
-                header += (usings ?? "") + Environment.NewLine;
-                header += "static class " + className + " {" + Environment.NewLine;
-                header += "static void Script(){" + Environment.NewLine;
-                var footer = "";
-                footer += Environment.NewLine + "}}";
+                string classname = replaceRegex.Replace(fileNameWithoutExtension, "");
+                classname = classname.TrimStart('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
-                var code = header + document.Text + footer;
+                string header = String.Empty;
+                header += (usings ?? "") + Environment.NewLine;
+                header += "public static class " + classname + " {" + Environment.NewLine;
+                header += "public static void Main() {" + Environment.NewLine;
+                header += (variables ?? "") + Environment.NewLine;
+
+                string footer = "}" + Environment.NewLine + "}" + Environment.NewLine;
+
+                string code = header + document.Text + Environment.NewLine + footer;
+
                 offset += header.Length;
+
                 return new ReadOnlyDocument(new StringTextSource(code), document.FileName);
             }
             return document;
         }
     }
-
 }
