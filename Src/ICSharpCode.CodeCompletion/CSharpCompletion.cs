@@ -19,19 +19,24 @@ namespace ICSharpCode.CodeCompletion
     {
         private IProjectContent projectContent;
         
-        public CSharpCompletion()
+        public CSharpCompletion(IReadOnlyList<Assembly> assemblies = null)
         {
             projectContent = new CSharpProjectContent();
-            var assemblies = new List<Assembly>
+            if (assemblies == null)
             {
+                assemblies = new List<Assembly>
+                {
                     typeof(object).Assembly, // mscorlib
                     typeof(Uri).Assembly, // System.dll
                     typeof(Enumerable).Assembly, // System.Core.dll
-//					typeof(System.Xml.XmlDocument).Assembly, // System.Xml.dll
-//					typeof(System.Drawing.Bitmap).Assembly, // System.Drawing.dll
-//					typeof(Form).Assembly, // System.Windows.Forms.dll
-//					typeof(ICSharpCode.NRefactory.TypeSystem.IProjectContent).Assembly,
+                    //					typeof(System.Xml.XmlDocument).Assembly, // System.Xml.dll
+                    //					typeof(System.Drawing.Bitmap).Assembly, // System.Drawing.dll
+                    //					typeof(Form).Assembly, // System.Windows.Forms.dll
+                    //					typeof(ICSharpCode.NRefactory.TypeSystem.IProjectContent).Assembly,
                 };
+            }
+
+            assemblies = assemblies.Where(v => !v.IsDynamic).ToList();
 
             var unresolvedAssemblies = new IUnresolvedAssembly[assemblies.Count];
             Stopwatch total = Stopwatch.StartNew();
@@ -48,8 +53,8 @@ namespace ICSharpCode.CodeCompletion
             projectContent = projectContent.AddAssemblyReferences((IEnumerable<IUnresolvedAssembly>)unresolvedAssemblies);
         }
 
-        public CSharpCompletion(ICSharpScriptProvider scriptProvider)
-            :this()
+        public CSharpCompletion(ICSharpScriptProvider scriptProvider, IReadOnlyList<Assembly> assemblies = null)
+            :this(assemblies)
         {
             ScriptProvider = scriptProvider;
         }
@@ -112,22 +117,24 @@ namespace ICSharpCode.CodeCompletion
             //get the using statements from the script provider
             string usings = null;
             string variables = null;
+            string @namespace = null;
             if (ScriptProvider != null)
             {
                 usings = ScriptProvider.GetUsing();
                 variables = ScriptProvider.GetVars();
+                @namespace = ScriptProvider.GetNamespace();
             }
-            return GetCompletions(document, offset, controlSpace, usings, variables);
+            return GetCompletions(document, offset, controlSpace, usings, variables, @namespace);
         }
 
-        public CodeCompletionResult GetCompletions(IDocument document, int offset, bool controlSpace, string usings, string variables)
+        public CodeCompletionResult GetCompletions(IDocument document, int offset, bool controlSpace, string usings, string variables, string @namespace)
         {
             var result = new CodeCompletionResult();
 
             if (String.IsNullOrEmpty(document.FileName))
                 return result;
 
-            var completionContext = new CSharpCompletionContext(document, offset, projectContent, usings, variables);
+            var completionContext = new CSharpCompletionContext(document, offset, projectContent, usings, variables, @namespace);
 
             var completionFactory = new CSharpCompletionDataFactory(completionContext.TypeResolveContextAtCaret, completionContext);
             var cce = new CSharpCompletionEngine(
