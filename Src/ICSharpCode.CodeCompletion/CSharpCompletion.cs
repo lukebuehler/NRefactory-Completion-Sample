@@ -36,6 +36,8 @@ namespace ICSharpCode.CodeCompletion
                 };
             }
 
+            assemblies = assemblies.Where(v => !v.IsDynamic).ToList();
+
             var unresolvedAssemblies = new IUnresolvedAssembly[assemblies.Count];
             Stopwatch total = Stopwatch.StartNew();
             Parallel.For(
