@@ -33,6 +33,7 @@ namespace ICSharpCode.CodeCompletion
         public readonly int OriginalOffset;
         public readonly string OriginalUsings;
         public readonly string OriginalVariables;
+        public readonly string OriginalNamespace;
 
         public readonly int Offset;
         public readonly IDocument Document;
@@ -50,15 +51,16 @@ namespace ICSharpCode.CodeCompletion
         /// <param name="projectContent">Content of the project.</param>
         /// <param name="usings">The usings.</param>
         /// <param name="variables">The variables</param>
-        public CSharpCompletionContext(IDocument document, int offset, IProjectContent projectContent, string usings = null, string variables = null)
+        public CSharpCompletionContext(IDocument document, int offset, IProjectContent projectContent, string usings = null, string variables = null, string @namespace = null)
         {
             OriginalDocument = document;
             OriginalOffset = offset;
             OriginalUsings = usings;
             OriginalVariables = variables;
+            OriginalNamespace = @namespace;
 
             //if the document is a c# script we have to soround the document with some code.
-            Document = PrepareCompletionDocument(document, ref offset, usings, variables);
+            Document = PrepareCompletionDocument(document, ref offset, usings, variables, @namespace);
             Offset = offset;
 
             var syntaxTree = new CSharpParser().Parse(Document, Document.FileName);
@@ -76,7 +78,7 @@ namespace ICSharpCode.CodeCompletion
         }
 
         private static Regex replaceRegex = new Regex("[^a-zA-Z0-9_]");
-        private static IDocument PrepareCompletionDocument(IDocument document, ref int offset, string usings = null, string variables = null)
+        private static IDocument PrepareCompletionDocument(IDocument document, ref int offset, string usings = null, string variables = null, string @namespace = null)
         {
             if (String.IsNullOrEmpty(document.FileName))
                 return document;
@@ -96,11 +98,19 @@ namespace ICSharpCode.CodeCompletion
 
                 string header = String.Empty;
                 header += (usings ?? "") + Environment.NewLine;
+                if (@namespace != null)
+                {
+                    header += "namespace " + @namespace + " {" + Environment.NewLine;
+                }
                 header += "public static class " + classname + " {" + Environment.NewLine;
                 header += "public static void Main() {" + Environment.NewLine;
                 header += (variables ?? "") + Environment.NewLine;
 
                 string footer = "}" + Environment.NewLine + "}" + Environment.NewLine;
+                if (@namespace != null)
+                {
+                    footer += "}" + Environment.NewLine;
+                }
 
                 string code = header + document.Text + Environment.NewLine + footer;
 

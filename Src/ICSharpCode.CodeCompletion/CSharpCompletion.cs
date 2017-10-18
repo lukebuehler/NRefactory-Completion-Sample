@@ -117,22 +117,24 @@ namespace ICSharpCode.CodeCompletion
             //get the using statements from the script provider
             string usings = null;
             string variables = null;
+            string @namespace = null;
             if (ScriptProvider != null)
             {
                 usings = ScriptProvider.GetUsing();
                 variables = ScriptProvider.GetVars();
+                @namespace = ScriptProvider.GetNamespace();
             }
-            return GetCompletions(document, offset, controlSpace, usings, variables);
+            return GetCompletions(document, offset, controlSpace, usings, variables, @namespace);
         }
 
-        public CodeCompletionResult GetCompletions(IDocument document, int offset, bool controlSpace, string usings, string variables)
+        public CodeCompletionResult GetCompletions(IDocument document, int offset, bool controlSpace, string usings, string variables, string @namespace)
         {
             var result = new CodeCompletionResult();
 
             if (String.IsNullOrEmpty(document.FileName))
                 return result;
 
-            var completionContext = new CSharpCompletionContext(document, offset, projectContent, usings, variables);
+            var completionContext = new CSharpCompletionContext(document, offset, projectContent, usings, variables, @namespace);
 
             var completionFactory = new CSharpCompletionDataFactory(completionContext.TypeResolveContextAtCaret, completionContext);
             var cce = new CSharpCompletionEngine(

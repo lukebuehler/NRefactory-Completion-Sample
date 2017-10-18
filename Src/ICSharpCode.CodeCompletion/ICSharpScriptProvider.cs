@@ -12,5 +12,6 @@ namespace ICSharpCode.CodeCompletion
     {
         string GetUsing();
         string GetVars();
+        string GetNamespace();
     }
 }

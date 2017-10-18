@@ -24,5 +24,7 @@ namespace ICSharpCode.CodeCompletion.Sample
         {
             return "int age = 25;";
         }
+
+        public string GetNamespace() => null;
     }
 }
