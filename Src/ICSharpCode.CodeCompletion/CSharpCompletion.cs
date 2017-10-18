@@ -19,19 +19,22 @@ namespace ICSharpCode.CodeCompletion
     {
         private IProjectContent projectContent;
         
-        public CSharpCompletion()
+        public CSharpCompletion(IReadOnlyList<Assembly> assemblies = null)
         {
             projectContent = new CSharpProjectContent();
-            var assemblies = new List<Assembly>
+            if (assemblies == null)
             {
+                assemblies = new List<Assembly>
+                {
                     typeof(object).Assembly, // mscorlib
                     typeof(Uri).Assembly, // System.dll
                     typeof(Enumerable).Assembly, // System.Core.dll
-//					typeof(System.Xml.XmlDocument).Assembly, // System.Xml.dll
-//					typeof(System.Drawing.Bitmap).Assembly, // System.Drawing.dll
-//					typeof(Form).Assembly, // System.Windows.Forms.dll
-//					typeof(ICSharpCode.NRefactory.TypeSystem.IProjectContent).Assembly,
+                    //					typeof(System.Xml.XmlDocument).Assembly, // System.Xml.dll
+                    //					typeof(System.Drawing.Bitmap).Assembly, // System.Drawing.dll
+                    //					typeof(Form).Assembly, // System.Windows.Forms.dll
+                    //					typeof(ICSharpCode.NRefactory.TypeSystem.IProjectContent).Assembly,
                 };
+            }
 
             var unresolvedAssemblies = new IUnresolvedAssembly[assemblies.Count];
             Stopwatch total = Stopwatch.StartNew();
@@ -48,8 +51,8 @@ namespace ICSharpCode.CodeCompletion
             projectContent = projectContent.AddAssemblyReferences((IEnumerable<IUnresolvedAssembly>)unresolvedAssemblies);
         }
 
-        public CSharpCompletion(ICSharpScriptProvider scriptProvider)
-            :this()
+        public CSharpCompletion(ICSharpScriptProvider scriptProvider, IReadOnlyList<Assembly> assemblies = null)
+            :this(assemblies)
         {
             ScriptProvider = scriptProvider;
         }
