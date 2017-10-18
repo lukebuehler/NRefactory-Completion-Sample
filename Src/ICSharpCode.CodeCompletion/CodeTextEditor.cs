@@ -53,6 +53,20 @@ namespace ICSharpCode.CodeCompletion
             SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(Path.GetExtension(fileName));
         }
 
+        public void NewFile(string fileName, string text)
+        {
+            if (completionWindow != null)
+                completionWindow.Close();
+            if (insightWindow != null)
+                insightWindow.Close();
+
+            FileName = fileName;
+            Text = text;
+            Document.FileName = FileName;
+
+            SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(Path.GetExtension(fileName));
+        }
+
         public bool SaveFile()
         {
             if (String.IsNullOrEmpty(FileName))
